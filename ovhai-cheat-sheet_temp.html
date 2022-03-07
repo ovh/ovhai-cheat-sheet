@@ -12,17 +12,17 @@
 <div class="sect1">
 <h2 id="_about_ovhai_cli">About ovhai CLI</h2>
 <div class="sectionbody">
-<p class=""><code>ovhai</code> is a CLI that allow you to interact with OVHcloud AI Training (<a href="https://www.ovhcloud.com/fr/public-cloud/ai-training/" class="bare">https://www.ovhcloud.com/fr/public-cloud/ai-training/</a>
+<p class=""><code>ovhai</code> is a CLI that allows you to interact with OVHcloud AI Training (<a href="https://www.ovhcloud.com/fr/public-cloud/ai-training/" class="bare">https://www.ovhcloud.com/fr/public-cloud/ai-training/</a>
 ).
 OVHcloud AI training is a cloud service that allows Data Scientists, ML Engineers and Deep Learning practitioners to create and allocate training ressources on demand.</p>
 <p class="">With the CLI you can:
-- manage jobs (list, run, stop, execute commands inside&#8230;&#8203;)
-- manage AI notebooks (start, stop, sync&#8230;&#8203;)
-- manage object storage (upload data to object storage, attach data to a notebook, delete a bucket/container &#8230;&#8203;)
-- manage apps (list, run, delete&#8230;&#8203;)
-- manage containers registries (list, add a private registry&#8230;&#8203;)
-- manage access tokens
-- &#8230;&#8203;</p>
+* manage jobs (list, run, stop, execute commands inside&#8230;&#8203;)
+* manage AI notebooks (start, stop, sync&#8230;&#8203;)
+* manage object storage (upload data to object storage, attach data to a notebook, delete a bucket/container &#8230;&#8203;)
+* manage apps (list, run, delete&#8230;&#8203;)
+* manage containers registries (list, add a private registry&#8230;&#8203;)
+* manage access tokens
+* &#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect1">
@@ -84,7 +84,7 @@ Trust Id: bea1c2cc345e67a89adf1023c45ccd67</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_show_all_the_environments">Show all the environments</h3>
+<h3 id="_show_all_the_regions_and_environments">Show all the regions and environments</h3>
 <div class="literalblock">
 <div class="content">
 <pre>$ ovhai config ls
@@ -101,7 +101,8 @@ GRA  https://gra.training.ai.cloud.ovh.net/v1</pre>
 <h2 id="_jobs">Jobs</h2>
 <div class="sectionbody">
 <p class="">A job is a Docker container running on the OVHcloud AI infrastructure.
-You can you specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an object storage through volumes, and run it.</p>
+You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.</p>
+<p class="">A job have a start and an end.</p>
 <div class="sect2">
 <h3 id="_list_jobs">List jobs</h3>
 <p class=""><code>$ ovhai job ls</code></p>
@@ -141,16 +142,83 @@ You can you specify a Docker image (from Docker Hub or a private registry), allo
 <p class=""><code>$ ovhai job exec -it &lt;job_ID&gt;&#8201;&#8212;&#8201;bash</code></p>
 </div>
 <div class="sect2">
-<h3 id="_manually_push_data_from_tobject_storage_to_the_job_while_it_is_running">Manually push data from tObject Storage to the job (while it is running)</h3>
+<h3 id="_synchronize_manually_push_data_from_job_to_object_storage_while_it_is_running">Synchronize - Manually push data from Job to Object Storage (while it is running)</h3>
 <p class=""><code>$ ovhai job push-data &lt;job_ID&gt;</code></p>
 </div>
 <div class="sect2">
-<h3 id="_manually_pull_data_from_object_storage_to_the_job_while_it_is_running">Manually pull data from Object Storage to the job (while it is running)</h3>
+<h3 id="_synchronize_manually_pull_data_from_object_storage_to_job_while_it_is_running">Synchronize - Manually pull data from Object Storage to Job (while it is running)</h3>
 <p class=""><code>$ ovhai job pull-data &lt;job_ID&gt;</code></p>
 </div>
 <div class="sect2">
 <h3 id="_stop_a_job">Stop a job</h3>
 <p class=""><code>$ ovhai job stop &lt;job_ID&gt;</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_object_storage">Data (Object Storage)</h2>
+<div class="sectionbody">
+<p class="">Jobs are containers so by default there are ephemeral, it means that if you store data inside jobs, you can lose them.
+The solution is to link your jobs and notebooks to Object Storage containers (buckets).</p>
+<div class="sect2">
+<h3 id="_list_object_storage_containers">List Object Storage containers</h3>
+<p class=""><code>$ ovhai data ls &lt;REGION&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_list_object_storage_containers_that_starting_with_test">List Object Storage containers that starting with "test%"</h3>
+<p class=""><code>$ ovhai data ls &lt;REGION&gt; --prefix test</code></p>
+</div>
+<div class="sect2">
+<h3 id="_push_files_objects_to_my_container">Push files (objects) to my-container</h3>
+<p class=""><code>$ ovhai data upload &lt;REGION&gt; my-container some/local-file other-file</code></p>
+</div>
+<div class="sect2">
+<h3 id="_delete_an_object_on_my_container">Delete an object on my-container</h3>
+<p class=""><code>$ ovhai data delete &lt;REGION&gt; my-container my-object</code></p>
+</div>
+<div class="sect2">
+<h3 id="_delete_my_container">Delete my-container</h3>
+<p class=""><code>$ ovhai data delete &lt;REGION&gt; my-container</code></p>
+</div>
+<div class="sect2">
+<h3 id="_delete_all_of_your_containers_starting_by_test">Delete all of your containers starting by "test%"</h3>
+<p class=""><code>$ ovhai data delete &lt;REGION&gt; --prefix test</code></p>
+</div>
+<div class="sect2">
+<h3 id="_delete_all_of_your_containers">Delete all of your containers</h3>
+<p class=""><code>$ ovhai data delete &lt;REGION&gt; --all</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apps">Apps</h2>
+<div class="sectionbody">
+<p class="">An app is like a job but for API or daemon process that should never stop.
+An app runs as a group of load balanced Docker containers within OVHcloud AI infrastructure.</p>
+<p class="">You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.</p>
+<div class="sect2">
+<h3 id="_list_apps">List apps</h3>
+<p class=""><code>$ ovhai app ls</code></p>
+</div>
+<div class="sect2">
+<h3 id="_run_an_app_and_specify_we_want_3_replicas">Run an app and specify we want 3 replicas</h3>
+<p class=""><code>$ ovhai app run priv-registry.gra.training.ai.cloud.ovh.net/public/infrastructureascode/hello-world:latest -p 8080 --cpu 1 --fixed-scale 3</code></p>
+</div>
+<div class="sect2">
+<h3 id="_run_an_app_and_mount_a_volume_linked_to_an_object_storage_container">Run an app and mount a volume linked to an Object Storage container</h3>
+<p class=""><code>$ ovhai app run &lt;docker-image&gt; --gpu 4 --volume my-container@&lt;REGION&gt;:/data</code></p>
+</div>
+<div class="sect2">
+<h3 id="_get_app_status">Get app status</h3>
+<p class=""><code>$ ovhai app get &lt;app_ID&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_get_app_s_url">Get app&#8217;s URL</h3>
+<p class=""><code>$ ovhai app get &lt;app_ID&gt; -o json | jq ".status.url"</code></p>
+</div>
+<div class="sect2">
+<h3 id="_stop_an_app">Stop an app</h3>
+<p class=""><code>$ ovhai app stop &lt;app_ID&gt;</code></p>
 </div>
 </div>
 </div>
@@ -164,89 +232,26 @@ You can you specify a Docker image (from Docker Hub or a private registry), allo
 </div>
 </div>
 <div class="sect1">
-<h2 id="_apps">Apps</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_xxxx">xxxx</h3>
-<p class="">xxx</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_data_object_storage">Data (Object Storage)</h2>
-<div class="sectionbody">
-<p class="">Jobs are containers so by default there are ephemeral, it means that if you store data inside jobs, you can lose them.
-The solution is to link your jobs and notebooks to Object Storage containers (buckets).</p>
-<div class="sect2">
-<h3 id="_list_object_storage_containers">List Object Storage containers</h3>
-<p class=""><code>$ ovhai data ls &lt;REGION&gt;</code></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_list_object_storage_containers_that_starting_with_test">List Object Storage containers that starting with "test%"</h2>
-<div class="sectionbody">
-<p class=""><code>$ ovhai data ls &lt;REGION&gt; --prefix test</code></p>
-<div class="sect2">
-<h3 id="_push_a_file_an_object_to_my_bucket_on">Push a file (an object) to my-bucket on</h3>
-<p class=""><code>$ ovhai data upload &lt;REGION&gt; my-bucket some/local-file</code></p>
-</div>
-<div class="sect2">
-<h3 id="_todo_xxx">TODO: xxx</h3>
-<p class="">How to upload several objects ?
-&gt; ovhai data upload GRA my-container some/local other-local --add-prefix a-prefix/</p>
-<p class="">How to delete an object ?
-&gt; ovhai data delete GRA my-container some-object</p>
-<p class="">How to delete several objects ?
-&gt; ovhai data delete GRA my-container --prefix a-prefix
-&gt; ovhai data delete GRA my-container --all</p>
-<p class="">How to delete a container ?
-&gt; ovhai data delete GRA my-container</p>
-<p class="">How to delete several containers ?
-&gt; ovhai data delete GRA --prefix a-prefix
-&gt; ovhai data delete GRA --all</p>
-<p class="">xxx</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_registries">Registries</h2>
 <div class="sectionbody">
+<p class="">A registry is a place where you can push and pull your Docker images.
+By default, you have access to a shared registry scoped to your project, you can only push images and use them for jobs.
+You can also add private registries.</p>
 <div class="sect2">
-<h3 id="_xxx_2">xxx</h3>
-<p class="">xxx</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="">&#8230;&#8203;</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_2">&#8230;&#8203;</h3>
-<p class="">This command is useful when you have defined some modules. Modules are vendored
-so when you edit them, you need to get again modules content.</p>
-<p class=""><code>$ terraform get -update=true</code></p>
-<p class="">When you use modules, the first thing you’ll have to do is to do a terraform
-get. This pulls modules into the .terraform directory. Once you do that, unless
-you do another <code>terraform get -update=true</code>, you’ve essentially vendored those
-modules.</p>
+<h3 id="_list_registries">List registries</h3>
+<p class=""><code>$ ovhai registry ls</code></p>
 </div>
 <div class="sect2">
-<h3 id="_plan">Plan</h3>
-<p class="">The plan step check configuration to execute and write a plan to apply to target
-infrastructure provider.</p>
-<p class=""><code>$ terraform plan -out plan.out</code></p>
-<p class="">It’s an important feature of Terraform that allows a user to see which actions
-Terraform will perform prior to making any changes, increasing confidence that a
-change will have the desired effect once applied.</p>
-<p class="">When you execute terraform plan command, terraform will scan all *.tf files in
-your directory and create the plan.</p>
+<h3 id="_add_a_private_registry">Add a private registry</h3>
+<p class=""><code>$ ovhai registry add &lt;url&gt;</code></p>
 </div>
 <div class="sect2">
-<h3 id="_apply">Apply</h3>
-<p class="">Now you have the desired state so you can execute the plan.</p>
-<p class=""><code>$ terraform apply plan.out</code></p>
-<p class=""><code>$ terraform apply</code></p>
+<h3 id="_get_registry_information">Get registry information</h3>
+<p class=""><code>$ ovhai registry get &lt;registry_ID&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_delete_a_private_registry">Delete a private registry</h3>
+<p class=""><code>$ ovhai registry delete &lt;registry_ID&gt;</code></p>
 </div>
 </div>
 </div>

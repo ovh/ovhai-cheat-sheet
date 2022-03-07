@@ -8,18 +8,18 @@ Aurélie Vache <https://twitter.com/aurelievache>
 
 == About ovhai CLI
 
-`ovhai` is a CLI that allow you to interact with OVHcloud AI Training (https://www.ovhcloud.com/fr/public-cloud/ai-training/
+`ovhai` is a CLI that allows you to interact with OVHcloud AI Training (https://www.ovhcloud.com/fr/public-cloud/ai-training/
 ).
 OVHcloud AI training is a cloud service that allows Data Scientists, ML Engineers and Deep Learning practitioners to create and allocate training ressources on demand. 
 
 With the CLI you can:
-- manage jobs (list, run, stop, execute commands inside...)
-- manage AI notebooks (start, stop, sync...)
-- manage object storage (upload data to object storage, attach data to a notebook, delete a bucket/container ...)
-- manage apps (list, run, delete...)
-- manage containers registries (list, add a private registry...)
-- manage access tokens
-- ...
+* manage jobs (list, run, stop, execute commands inside...)
+* manage AI notebooks (start, stop, sync...)
+* manage object storage (upload data to object storage, attach data to a notebook, delete a bucket/container ...)
+* manage apps (list, run, delete...)
+* manage containers registries (list, add a private registry...)
+* manage access tokens
+* ...
 
 == Installation
 
@@ -67,7 +67,7 @@ Tenant:   a123a4e56b789c1ba23a456b789fcf01
 Trust Id: bea1c2cc345e67a89adf1023c45ccd67
 ....
 
-=== Show all the environments
+=== Show all the regions and environments
 
 ....
 $ ovhai config ls
@@ -80,7 +80,9 @@ GRA  https://gra.training.ai.cloud.ovh.net/v1
 == Jobs
 
 A job is a Docker container running on the OVHcloud AI infrastructure.
-You can you specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an object storage through volumes, and run it.
+You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.
+
+A job have a start and an end.
 
 === List jobs
 
@@ -106,6 +108,10 @@ You can you specify a Docker image (from Docker Hub or a private registry), allo
 
 -g, --gpu: number of GPUs (default 1)
 
+=== TODO: --insecure !
+
+xxx
+
 === Get job status
 
 `$ ovhai job get <job_ID>`
@@ -122,29 +128,17 @@ You can you specify a Docker image (from Docker Hub or a private registry), allo
 
 `$ ovhai job exec -it <job_ID> -- bash`
 
-=== Manually push data from tObject Storage to the job (while it is running)
+=== Synchronize - Manually push data from Job to Object Storage (while it is running)
 
 `$ ovhai job push-data <job_ID>`
 
-=== Manually pull data from Object Storage to the job (while it is running)
+=== Synchronize - Manually pull data from Object Storage to Job (while it is running)
 
 `$ ovhai job pull-data <job_ID>`
 
 === Stop a job
 
 `$ ovhai job stop <job_ID>`
-
-== Notebooks
-
-=== xxx
-
-xxx
-
-== Apps
-
-=== xxxx
-
-xxx
 
 == Data (Object Storage)
 
@@ -155,77 +149,85 @@ The solution is to link your jobs and notebooks to Object Storage containers (bu
 
 `$ ovhai data ls <REGION>`
 
-== List Object Storage containers that starting with "test%"
+=== List Object Storage containers that starting with "test%"
 
 `$ ovhai data ls <REGION> --prefix test`
 
-=== Push a file (an object) to my-bucket on 
+=== Push files (objects) to my-container
 
-`$ ovhai data upload <REGION> my-bucket some/local-file`
+`$ ovhai data upload <REGION> my-container some/local-file other-file`
 
-=== TODO: xxx
+=== Delete an object on my-container
 
-How to upload several objects ?
-> ovhai data upload GRA my-container some/local other-local --add-prefix a-prefix/
+`$ ovhai data delete <REGION> my-container my-object`
 
-How to delete an object ?
-> ovhai data delete GRA my-container some-object
+=== Delete my-container
 
-How to delete several objects ?
-> ovhai data delete GRA my-container --prefix a-prefix
-> ovhai data delete GRA my-container --all
+`$ ovhai data delete <REGION> my-container`
 
-How to delete a container ?
-> ovhai data delete GRA my-container
+=== Delete all of your containers starting by "test%"
 
-How to delete several containers ?
-> ovhai data delete GRA --prefix a-prefix
-> ovhai data delete GRA --all
+`$ ovhai data delete <REGION> --prefix test`
 
+=== Delete all of your containers
+
+`$ ovhai data delete <REGION> --all`
+
+== Apps
+
+An app is like a job but for API or daemon process that should never stop.
+An app runs as a group of load balanced Docker containers within OVHcloud AI infrastructure.
+
+You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.
+
+=== List apps
+
+`$ ovhai app ls`
+
+=== Run an app and specify we want 3 replicas
+
+`$ ovhai app run priv-registry.gra.training.ai.cloud.ovh.net/public/infrastructureascode/hello-world:latest -p 8080 --cpu 1 --fixed-scale 3`
+
+=== Run an app and mount a volume linked to an Object Storage container
+
+`$ ovhai app run <docker-image> --gpu 4 --volume my-container@<REGION>:/data`
+
+=== Get app status
+
+`$ ovhai app get <app_ID>`
+
+=== Get app's URL
+
+`$ ovhai app get <app_ID> -o json | jq ".status.url"`
+
+=== Stop an app
+
+`$ ovhai app stop <app_ID>`
+
+== Notebooks
+
+=== xxx TODO: xx
 
 xxx
 
 == Registries
 
-=== xxx
+A registry is a place where you can push and pull your Docker images.
+By default, you have access to a shared registry scoped to your project, you can only push images and use them for jobs.
+You can also add private registries.
 
-xxx
+=== List registries
 
-== ...
+`$ ovhai registry ls`
 
-=== ...
+=== Add a private registry
 
+`$ ovhai registry add <url>`
 
-This command is useful when you have defined some modules. Modules are vendored
-so when you edit them, you need to get again modules content.
+=== Get registry information
 
-`$ terraform get -update=true`
+`$ ovhai registry get <registry_ID>`
 
-When you use modules, the first thing you’ll have to do is to do a terraform
-get. This pulls modules into the .terraform directory. Once you do that, unless
-you do another `terraform get -update=true`, you’ve essentially vendored those
-modules.
+=== Delete a private registry
 
-=== Plan
-
-The plan step check configuration to execute and write a plan to apply to target
-infrastructure provider.
-
-`$ terraform plan -out plan.out`
-
-It’s an important feature of Terraform that allows a user to see which actions
-Terraform will perform prior to making any changes, increasing confidence that a
-change will have the desired effect once applied.
-
-When you execute terraform plan command, terraform will scan all *.tf files in
-your directory and create the plan.
-
-=== Apply
-
-Now you have the desired state so you can execute the plan.
-
-`$ terraform apply plan.out`
-
-
-`$ terraform apply`
-
+`$ ovhai registry delete <registry_ID>`
