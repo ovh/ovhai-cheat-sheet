@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="templates/cheat-sheet/template/assets/style.css" rel="stylesheet">
+</head>
+<body>
+<header>
+  <h1><img width="150" src="templates/cheat-sheet/template/assets/logo-w.png"/> ovhai CLI Cheat Sheet</h1>
+</header>
+<section class="content">
+<div class="sect1">
+<h2 id="_about_ovhai_cli">About ovhai CLI</h2>
+<div class="sectionbody">
+<p class=""><code>ovhai</code> is a CLI that allow you to interact with OVHcloud AI Training (<a href="https://www.ovhcloud.com/fr/public-cloud/ai-training/" class="bare">https://www.ovhcloud.com/fr/public-cloud/ai-training/</a>
+).
+OVHcloud AI training is a cloud service that allows Data Scientists, ML Engineers and Deep Learning practitioners to create and allocate training ressources on demand.</p>
+<p class="">With the CLI you can:
+- manage jobs (list, run, stop, execute commands inside&#8230;&#8203;)
+- manage AI notebooks (start, stop, sync&#8230;&#8203;)
+- manage object storage (upload data to object storage, attach data to a notebook, delete a bucket/container &#8230;&#8203;)
+- manage apps (list, run, delete&#8230;&#8203;)
+- manage containers registries (list, add a private registry&#8230;&#8203;)
+- manage access tokens
+- &#8230;&#8203;</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation">Installation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_install_through_curl">Install through curl</h3>
+<p class="">Define the region and then download the binary according to your OS:</p>
+<div class="literalblock">
+<div class="content">
+<pre>$ export REGION=gra ; curl -O https://cli.$REGION.training.ai.cloud.ovh.net/ovhai-darwin.zip
+$ unzip ovhai-darwin.zip
+$ sudo mv ovhai /usr/local/bin/ovhai
+$ rm ovhai-darwin.zip</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites">Prerequisites</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_create_an_openstack_user">Create an OpenStack user</h3>
+<p class="">Create an OpenStack User with the roles "AI Training Operator" and "ObjectStore operator".
+Follow the guide: <a href="https://docs.ovh.com/gb/en/ai-training/create-user/" class="bare">https://docs.ovh.com/gb/en/ai-training/create-user/</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usage">Usage</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_show_version">Show version</h3>
+<div class="literalblock">
+<div class="content">
+<pre>$ ovhai --version
+
+ovhai 2.3.1</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_login">Login</h3>
+<p class=""><code>$ ovhai login</code></p>
+<p class="">It’s the first command you need to execute. To login into AI Training platform you need the credentials of a user with the roles "AI Training Operator" and ObjectStore operator.
+Enter the user name and password.</p>
+</div>
+<div class="sect2">
+<h3 id="_show_current_user_information">Show current user information</h3>
+<div class="literalblock">
+<div class="content">
+<pre>$ ovhai me
+
+Name:     user-NnnmWdWTFjn3
+Tenant:   a123a4e56b789c1ba23a456b789fcf01
+Trust Id: bea1c2cc345e67a89adf1023c45ccd67</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_show_all_the_environments">Show all the environments</h3>
+<div class="literalblock">
+<div class="content">
+<pre>$ ovhai config ls
+
+NAME URL
+BHS  https://bhs.training.ai.cloud.ovh.net/v1
+GRA  https://gra.training.ai.cloud.ovh.net/v1</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jobs">Jobs</h2>
+<div class="sectionbody">
+<p class="">A job is a Docker container running on the OVHcloud AI infrastructure.
+You can you specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an object storage through volumes, and run it.</p>
+<div class="sect2">
+<h3 id="_list_jobs">List jobs</h3>
+<p class=""><code>$ ovhai job ls</code></p>
+</div>
+<div class="sect2">
+<h3 id="_run_a_simple_job">Run a simple job</h3>
+<p class=""><code>$ ovhai job run ubuntu&#8201;&#8212;&#8201;bash -c "while true; do echo toto; sleep 2; done"</code></p>
+</div>
+<div class="sect2">
+<h3 id="_run_a_job_and_pass_your_ssh_key">Run a job and pass your SSH key</h3>
+<p class=""><code>$ ovhai job run ubuntu -s $HOME/.ssh/id_rsa.pub&#8201;&#8212;&#8201;bash -c "sleep infinity"</code></p>
+</div>
+<div class="sect2">
+<h3 id="_run_a_job_with_1_cpu">Run a job, with 1 CPU</h3>
+<p class=""><code>$ ovhai job run &lt;docker_image&gt; --cpu 1&#8201;&#8212;&#8201;sleep infinity</code></p>
+<p class="">-c, --cpu: number of CPUs (ignored if GPUs is specified)</p>
+</div>
+<div class="sect2">
+<h3 id="_run_a_job_with_2_gpus_and_plug_it_to_an_object_storage_container_bucket_in_read_only_access_mode">Run a job, with 2 GPUs and plug it to an object storage container (bucket) in read only access mode</h3>
+<p class=""><code>$ ovhai job run &lt;docker_image&gt; --gpu 2 -v &lt;container_name&gt;@&lt;REGION&gt;:/data:ro&#8201;&#8212;&#8201;sleep infinity</code></p>
+<p class="">-g, --gpu: number of GPUs (default 1)</p>
+</div>
+<div class="sect2">
+<h3 id="_get_job_status">Get job status</h3>
+<p class=""><code>$ ovhai job get &lt;job_ID&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_diplay_job_logs">Diplay job logs</h3>
+<p class=""><code>$ ovhai job logs &lt;job_ID&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_diplay_job_logs_and_stream_the_logs">Diplay job logs and stream the logs</h3>
+<p class=""><code>$ ovhai job logs -f &lt;job_ID&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_execute_commands_in_a_job">Execute commands in a job</h3>
+<p class=""><code>$ ovhai job exec -it &lt;job_ID&gt;&#8201;&#8212;&#8201;bash</code></p>
+</div>
+<div class="sect2">
+<h3 id="_manually_push_data_from_tobject_storage_to_the_job_while_it_is_running">Manually push data from tObject Storage to the job (while it is running)</h3>
+<p class=""><code>$ ovhai job push-data &lt;job_ID&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_manually_pull_data_from_object_storage_to_the_job_while_it_is_running">Manually pull data from Object Storage to the job (while it is running)</h3>
+<p class=""><code>$ ovhai job pull-data &lt;job_ID&gt;</code></p>
+</div>
+<div class="sect2">
+<h3 id="_stop_a_job">Stop a job</h3>
+<p class=""><code>$ ovhai job stop &lt;job_ID&gt;</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_notebooks">Notebooks</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_xxx">xxx</h3>
+<p class="">xxx</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apps">Apps</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_xxxx">xxxx</h3>
+<p class="">xxx</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_object_storage">Data (Object Storage)</h2>
+<div class="sectionbody">
+<p class="">Jobs are containers so by default there are ephemeral, it means that if you store data inside jobs, you can lose them.
+The solution is to link your jobs and notebooks to Object Storage containers (buckets).</p>
+<div class="sect2">
+<h3 id="_list_object_storage_containers">List Object Storage containers</h3>
+<p class=""><code>$ ovhai data ls &lt;REGION&gt;</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_list_object_storage_containers_that_starting_with_test">List Object Storage containers that starting with "test%"</h2>
+<div class="sectionbody">
+<p class=""><code>$ ovhai data ls &lt;REGION&gt; --prefix test</code></p>
+<div class="sect2">
+<h3 id="_push_a_file_an_object_to_my_bucket_on">Push a file (an object) to my-bucket on</h3>
+<p class=""><code>$ ovhai data upload &lt;REGION&gt; my-bucket some/local-file</code></p>
+</div>
+<div class="sect2">
+<h3 id="_todo_xxx">TODO: xxx</h3>
+<p class="">How to upload several objects ?
+&gt; ovhai data upload GRA my-container some/local other-local --add-prefix a-prefix/</p>
+<p class="">How to delete an object ?
+&gt; ovhai data delete GRA my-container some-object</p>
+<p class="">How to delete several objects ?
+&gt; ovhai data delete GRA my-container --prefix a-prefix
+&gt; ovhai data delete GRA my-container --all</p>
+<p class="">How to delete a container ?
+&gt; ovhai data delete GRA my-container</p>
+<p class="">How to delete several containers ?
+&gt; ovhai data delete GRA --prefix a-prefix
+&gt; ovhai data delete GRA --all</p>
+<p class="">xxx</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_registries">Registries</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_xxx_2">xxx</h3>
+<p class="">xxx</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="">&#8230;&#8203;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_2">&#8230;&#8203;</h3>
+<p class="">This command is useful when you have defined some modules. Modules are vendored
+so when you edit them, you need to get again modules content.</p>
+<p class=""><code>$ terraform get -update=true</code></p>
+<p class="">When you use modules, the first thing you’ll have to do is to do a terraform
+get. This pulls modules into the .terraform directory. Once you do that, unless
+you do another <code>terraform get -update=true</code>, you’ve essentially vendored those
+modules.</p>
+</div>
+<div class="sect2">
+<h3 id="_plan">Plan</h3>
+<p class="">The plan step check configuration to execute and write a plan to apply to target
+infrastructure provider.</p>
+<p class=""><code>$ terraform plan -out plan.out</code></p>
+<p class="">It’s an important feature of Terraform that allows a user to see which actions
+Terraform will perform prior to making any changes, increasing confidence that a
+change will have the desired effect once applied.</p>
+<p class="">When you execute terraform plan command, terraform will scan all *.tf files in
+your directory and create the plan.</p>
+</div>
+<div class="sect2">
+<h3 id="_apply">Apply</h3>
+<p class="">Now you have the desired state so you can execute the plan.</p>
+<p class=""><code>$ terraform apply plan.out</code></p>
+<p class=""><code>$ terraform apply</code></p>
+</div>
+</div>
+</div>
+<div class="sect1 authors">
+<h3>Authors :</h3>
+<div class="author">
+<div class="author-avatar"><img src="https://pbs.twimg.com/profile_images/726148230224949249/g2T2qehD_400x400.jpg"/></div>
+<div class="author-name"><a href="https://twitter.com/aurelievache">@aurelievache</a></div>
+<div class="author-bio">DevRel at OVHcloud</div>
+</div>
+
+<div class="author-bio">v1.0.0</div>
+</div>
+</section>
+</body>

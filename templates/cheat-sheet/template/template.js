@@ -43,11 +43,11 @@ module.exports = [{
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link href="./template/assets/style.css" rel="stylesheet">
+<link href="templates/cheat-sheet/template/assets/style.css" rel="stylesheet">
 </head>
 <body>
 <header>
-  <h1><img width="50" height="50" src="examples/cheat-sheet/template/assets/logo.png"/> ${ctx.node.getHeader().getTitle()}</h1>
+  <h1><img width="150" src="templates/cheat-sheet/template/assets/logo-w.png"/> ${ctx.node.getHeader().getTitle()}</h1>
 </header>
 <section class="content">
 ${ctx.node.getContent()}

@@ -1,5 +1,9 @@
 # ovhai cheat sheet
 
-# Generate cheat sheet PDF
+## Pre-requisites
 
-`$ ./bin/asciidoctorjs-pdf ovhai-cheat-sheet.adoc --template-require ../examples/cheat-sheet/template/template.js`
+`$ npm i yargs --save`
+
+## Generate cheat sheet PDF
+
+`$ ./bin/asciidoctorjs-pdf ovhai-cheat-sheet.adoc --template-require ../templates/cheat-sheet/template/template.js`

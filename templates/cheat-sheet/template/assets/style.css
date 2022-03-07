@@ -25,7 +25,7 @@ html {
 }
 
 header {
-  background-color: #131313;
+  background-color: #000E9C;
   display: grid;
   grid-template-columns: auto 1fr auto;
   padding: 0.7cm 12em 0.7cm 0.7cm;
