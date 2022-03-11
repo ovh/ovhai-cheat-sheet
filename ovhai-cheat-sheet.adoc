@@ -170,10 +170,10 @@ ovhai data ls <REGION> --prefix test
 ovhai data upload <REGION> my-container some/local-file other-file
 ```
 
-=== Delete an object on my-container
+=== Delete an object on my-container and all their objects
 
 ```
-ovhai data delete <REGION> my-container my-object
+ovhai data delete <REGION> my-container my-object --all
 ```
 
 === Delete my-container
@@ -247,6 +247,7 @@ ovhai app delete <app_ID>
 
 *Warning:* you need to stop the app before executing this command!
 
+== &nbsp;
 == &nbsp;
 == Notebooks
 
@@ -363,6 +364,8 @@ ovhai registry delete <registry_ID>
 The debug command is useful in order to display logs about a specified command executed by the CLI.
 
 === Debug a command
+
+Run a command, for example:
 
 ```
 ovhai app delete <app_ID>
