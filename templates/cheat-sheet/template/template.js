@@ -36,6 +36,16 @@ const renderAuthors = function (authors) {
   }).join('\n')
 }
 
+const renderOVHAuthors = function (authors) {
+  return authors.map(author => {
+    return `<div class="author">
+<div class="author-avatar"><img src="templates/cheat-sheet/template/assets/devrel.png"/></div>
+<div class="author-name">${author.author}</a></div>
+<div class="author-bio">${author.bio}</div>
+</div>
+`;
+  }).join('\n')
+}
 
 module.exports = [{
   paragraph: (ctx) => `<p class="${ctx.node.getRoles()}">${ctx.node.getContent()}</p>`,
@@ -51,11 +61,6 @@ module.exports = [{
 </header>
 <section class="content">
 ${ctx.node.getContent()}
-<div class="sect1 authors">
-<h3>Authors :</h3>
-${renderAuthors(getAuthors(ctx.node))}
-<div class="author-bio">${ctx.node.getAttribute('version')}</div>
-</div>
 </section>
 </body>`,
   page_break: () => `<div class="page-break"></div>`

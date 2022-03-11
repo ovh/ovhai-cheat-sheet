@@ -16,7 +16,6 @@ html, body {
   margin: 0;
   padding: 0;
   color: #4a4a4a;
-  text-align: justify;
 }
 
 html {
@@ -95,20 +94,21 @@ h3 {
   background:#fafcfe;
   border: 1px solid #d5d4d9;
   color: #4a4a4a;
+  width: 100%;
 }
 
 
 .listingblock pre,.listingblock pre[class] {
   font-size: 0.8em;
-  line-height: 1.5em;
+  line-height: 1.4em;
   border-radius: 4px;
   word-wrap: break-word;
-  padding: 1em;
+  padding: 0.7em;
 }
 
-.listingblock {
+/* .listingblock {
   margin-bottom: 2em;
-}
+} */
 
 a {
   color: #131313;
@@ -127,7 +127,7 @@ a {
 }
 
 .author-avatar > img {
-  border-radius: 50%;
+  border-radius: 10%;
   max-height: 2em;
 }
 
@@ -151,3 +151,16 @@ pre {
 .single-block {
   break-inside: avoid-column;
 }
+
+code {
+  display: inline-block;
+  white-space: pre-line;
+}
+
+/* code {
+  word-break: break-all;
+}
+
+pre {
+  word-break: break-all;
+} */
