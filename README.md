@@ -33,7 +33,7 @@ Have a look in [CONTRIBUTING.md](https://github.com/ovh/ovhai-cheat-sheet/blob/m
 
 ## Tests
  
-The cheat sheet must fit on a A4 page. 
+The cheat sheet must fit on a A4 page in landscape mode. 
 
 # Related links
  
