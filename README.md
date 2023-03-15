@@ -3,7 +3,7 @@
 Here is an example of the cheat sheet:   
 ![An extract of the cheat sheet](./doc/assets/example.png) 
 
-# Installation
+## Pre-requisites
 
 To update the cheat sheet you need to install:
   - [nodejs](https://nodejs.org/)
@@ -18,6 +18,7 @@ To generate the cheat sheet: `$ ./bin/asciidoctorjs-pdf ovhai-cheat-sheet.adoc -
 # Hacking
  
 You've juste to add / update information in the `ovhai-cheat-sheet.adoc`. 
+
 ## Get the sources
  
 ```bash
@@ -29,6 +30,7 @@ You've developed a new cool feature? Fixed an annoying bug? We'd be happy
 to hear from you!
  
 Have a look in [CONTRIBUTING.md](https://github.com/ovh/ovhai-cheat-sheet/blob/master/CONTRIBUTING.md)
+
 ## Tests
  
 The cheat sheet must fit on a A4 page. 
