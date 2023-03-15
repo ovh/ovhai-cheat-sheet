@@ -11,7 +11,7 @@ pay attention to a few things:
  
 # Coding and documentation Style
  
-The cheat sheet is written with [AsciiDoc(https://asciidoctor.org/docs/asciidoc-writers-guide/)].
+The cheat sheet is written with [AsciiDoc](https://asciidoctor.org/docs/asciidoc-writers-guide/).
 
 # Submitting Modifications
  
