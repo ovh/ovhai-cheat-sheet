@@ -9,9 +9,17 @@ To update the cheat sheet you need to install:
   - [nodejs](https://nodejs.org/)
   - [yargs](http://yargs.js.org/): `$ npm i yargs --save`
 
+The executable binary of `asciidoctopdf` is in `bin/` folder. If you want, you can download it from [its own repository](https://github.com/asciidoctor/asciidoctor-pdf).
+
 # Howto's
 
-To generate the cheat sheet: `$ ./bin/asciidoctorjs-pdf ovhai-cheat-sheet.adoc --template-require ../templates/cheat-sheet/template/template.js`
+To generate the cheat sheet:
+
+`$ ./bin/asciidoctorjs-pdf ovhai-cheat-sheet.adoc --template-require ../templates/cheat-sheet/template/template.js`
+
+or:
+
+`$ make run`
 
 # Configuration
  

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="templates/cheat-sheet/template/assets/style.css" rel="stylesheet">
+</head>
+<body>
+<header>
+  <h1><img width="150" src="templates/cheat-sheet/template/assets/logo-w.png"/> ovhai CLI Cheat Sheet</h1>
+</header>
+<section class="content">
+<div class="sect1">
+<h2 id="_about_ovhai_cli">About ovhai CLI</h2>
+<div class="sectionbody">
+<p class=""><code>ovhai</code> is a CLI that allows you to interact with OVHcloud AI Training (<a href="https://www.ovhcloud.com/fr/public-cloud/ai-training/" class="bare">https://www.ovhcloud.com/fr/public-cloud/ai-training/</a>
+).
+OVHcloud AI training is a cloud service that allows Data Scientists, ML Engineers and Deep Learning practitioners to create and allocate training ressources on demand.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation">Installation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_install_through_curl">Install through curl</h3>
+<p class="">Define the region &amp; the OS and then download the binary:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export REGION=gra ; export ENV=darwin
+curl -O https://cli.$REGION.training.ai.cloud.ovh.net/ovhai-$ENV.zip
+unzip ovhai-$ENV.zip
+sudo mv ovhai /usr/local/bin/ovhai ; rm ovhai-$ENV.zip</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites">Prerequisites</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_create_an_openstack_user">Create an OpenStack user</h3>
+<p class="">Create an OpenStack User with the roles "AI Training Operator" and "ObjectStore operator".
+Follow the guide: <a href="https://docs.ovh.com/gb/en/ai-training/create-user/" class="bare">https://docs.ovh.com/gb/en/ai-training/create-user/</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usage">Usage</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_show_version">Show version</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai --version</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_upgrade_the_cli">Upgrade the CLI</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai upgrade</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_login">Login</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai login</code></pre>
+</div>
+</div>
+<p class="">It’s the first command you need to execute. To login into AI Training platform you need the credentials of a user with the roles "AI Training Operator" and ObjectStore operator.
+Enter the user name and password.</p>
+</div>
+<div class="sect2">
+<h3 id="_show_current_user_information">Show current user information</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai me</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="">&nbsp;</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_show_all_the_regions_and_environments">Show all the regions and environments</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai config ls</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switch_to_another_region_environment">Switch to another region/environment</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai config set &lt;REGION&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_show_available_flavors">Show available flavors</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai capabilities flavor ls</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jobs">Jobs</h2>
+<div class="sectionbody">
+<p class="">A job is a Docker container running on the OVHcloud AI infrastructure.
+You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.</p>
+<p class="">A job have a start and an end.</p>
+<div class="sect2">
+<h3 id="_list_jobs">List jobs</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job ls</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_a_simple_job">Run a simple job</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job run ubuntu -- bash -c "while true; do echo toto; sleep 2; done"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_a_job_with_1_cpu_and_pass_your_ssh_key">Run a job, with 1 CPU and pass your SSH key</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job run ubuntu --cpu 1 -s $HOME/.ssh/id_rsa.pub -- bash -c "sleep infinity"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_a_job_with_2_gpus_and_plug_it_to_an_object_storage_container_bucket_in_read_only_access_mode">Run a job, with 2 GPUs and plug it to an object storage container (bucket) in read only access mode</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job run &lt;docker_image&gt; --gpu 2 -v &lt;container_name&gt;@&lt;REGION&gt;:/data:ro -- sleep infinity</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_job_status">Get job status</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job get &lt;job_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_diplay_job_logs_and_stream_the_logs">Diplay job logs and stream the logs</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job logs -f &lt;job_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_execute_commands_in_a_job">Execute commands in a job</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job exec -it &lt;job_ID&gt; -- bash</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_synchronize_manually_push_data_from_job_to_object_storage_while_it_is_running">Synchronize - Manually push data from Job to Object Storage (while it is running)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job push-data &lt;job_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_synchronize_manually_pull_data_from_object_storage_to_job_while_it_is_running">Synchronize - Manually pull data from Object Storage to Job (while it is running)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job pull-data &lt;job_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stop_a_job">Stop a job</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai job stop &lt;job_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_object_storage">Data (Object Storage)</h2>
+<div class="sectionbody">
+<p class="">Object Storage is a scalable, resilient and secure storage place accessible from anywhere through HTTPS APIs. It is a perfect place to store static files on the long term.
+Object Storage can be used to persist any data needed by jobs, notebooks or apps.</p>
+<div class="sect2">
+<h3 id="_list_object_storage_containers">List Object Storage containers</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai data ls &lt;REGION&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_list_object_storage_containers_that_starting_with_test">List Object Storage containers that starting with "test%"</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai data ls &lt;REGION&gt; --prefix test</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_push_files_objects_to_my_container">Push files (objects) to my-container</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai data upload &lt;REGION&gt; my-container some/local-file other-file</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_an_object_on_my_container_and_all_their_objects">Delete an object on my-container and all their objects</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai data delete &lt;REGION&gt; my-container my-object --all</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_my_container">Delete my-container</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai data delete &lt;REGION&gt; my-container</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_all_of_your_containers_starting_by_test">Delete all of your containers starting by "test%"</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai data delete &lt;REGION&gt; --prefix test</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_all_of_your_containers">Delete all of your containers</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai data delete &lt;REGION&gt; --all</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apps_alpha">Apps (Alpha)</h2>
+<div class="sectionbody">
+<p class=""><strong>Warning:</strong> <em>Apps are in Alpha stage so features and commands are subject to change.</em></p>
+<p class="">An app is like a job but for API or daemon process that should never stop.
+An app runs as a group of load balanced Docker containers within OVHcloud AI infrastructure.</p>
+<p class="">You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.</p>
+<div class="sect2">
+<h3 id="_list_apps">List apps</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app ls</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_an_app_and_specify_we_want_3_replicas">Run an app and specify we want 3 replicas</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app run &lt;registry&gt;/&lt;image&gt;:latest -p 8080 --cpu 1 --fixed-scale 3</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_an_app_and_mount_a_volume_linked_to_an_object_storage_container">Run an app and mount a volume linked to an Object Storage container</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app run &lt;docker-image&gt; --gpu 4 --volume my-container@&lt;REGION&gt;:/data</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_app_status">Get app status</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app get &lt;app_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_app_s_url">Get app&#8217;s URL</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app get &lt;app_ID&gt; -o json | jq ".status.url"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stop_an_app">Stop an app</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app stop &lt;app_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_an_app">Delete an app</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app delete &lt;app_ID&gt;</code></pre>
+</div>
+</div>
+<p class=""><strong>Warning:</strong> you need to stop the app before executing this command!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2">&nbsp;</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3">&nbsp;</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_notebooks">Notebooks</h2>
+<div class="sectionbody">
+<p class="">Notebook is used to easily work with one of the well-known Machine Learning frameworks on either JupyterLab or VSCode and powerful hardware.</p>
+<p class="">Already installed for you, and that you pay only for your notebooks while they are running.</p>
+<div class="sect2">
+<h3 id="_display_available_machine_learning_frameworks">Display available Machine Learning frameworks</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai capabilities framework</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_display_available_editors_for_notebooks">Display available editors for notebooks</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai capabilities editor</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_list_notebooks">List notebooks</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai notebook ls</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_a_notebook_using_pytorch_and_jupyterlab_with_1_gpu_and_allow_access_to_it_without_authentication">Run a notebook using PyTorch and JupyterLab, with 1 GPU and allow access to it without authentication</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai notebook run jupyterlab pytorch --gpu 1 --unsecure-http</code></pre>
+</div>
+</div>
+<p class=""><strong>--unsecure-http</strong>: allow to bypass authentication with an OpenStack user</p>
+</div>
+<div class="sect2">
+<h3 id="_run_a_notebook_with_a_specified_framework_version_1_cpu_and_mount_a_volume_linked_to_an_object_storage_container">Run a notebook with a specified framework version, 1 CPU and mount a volume linked to an Object Storage container</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai notebook run pytorch jupyterlab --framework-version 1.8.1-ovh.beta.1 --flavor ai1-1-cpu --cpu 1 -v my-container@&lt;REGION&gt;:/data:ro</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_a_notebook_and_give_access_to_it_for_people_outside_of_your_public_cloud_project">Run a notebook and give access to it for people outside of your Public Cloud project</h3>
+<p class="">If you want to share and give access to your jobs, apps or notebooks to people outside of your Public Cloud project, you can generate an access token.</p>
+<p class="">Create a token named <strong>my-token</strong>, that will allow to access any notebook that has a label <strong>subject=image-recognition</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai token create my-token --role read --label-selector subject=image-recognition</code></pre>
+</div>
+</div>
+<p class="">Run a notebook with <strong>image-recognition</strong> label:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai notebook run --gpu 1 --label subject=image-recognition pytorch vscode</code></pre>
+</div>
+</div>
+<p class="">Go to the URL on your browser, click on <strong>Login with token</strong> and enter the token.</p>
+</div>
+<div class="sect2">
+<h3 id="_get_notebook_information">Get notebook information</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai get notebook &lt;notebook_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_start_a_stopped_notebook">Start a stopped notebook</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai notebook start &lt;notebook_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stop_a_notebook">Stop a notebook</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai notebook stop &lt;notebook_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_a_notebook">Delete a notebook</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai notebook delete &lt;notebook_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_registries">Registries</h2>
+<div class="sectionbody">
+<p class="">A registry is a place where you can push and pull your Docker images.
+By default, you have access to a shared registry scoped to your project, you can only push images and use them for jobs and apps.
+You can add and delete private registries.</p>
+<div class="sect2">
+<h3 id="_list_registries">List registries</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai registry ls</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_add_a_private_registry">Add a private registry</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai registry add &lt;url&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_registry_information">Get registry information</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai registry get &lt;registry_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_a_private_registry">Delete a private registry</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai registry delete &lt;registry_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_debug">Debug</h2>
+<div class="sectionbody">
+<p class="">The debug command is useful in order to display logs about a specified command executed by the CLI.</p>
+<div class="sect2">
+<h3 id="_debug_a_command">Debug a command</h3>
+<p class="">Run a command, for example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai app delete &lt;app_ID&gt;</code></pre>
+</div>
+</div>
+<p class="">If the command fails, you will have a command number to debug:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ovhai debug &lt;command_number&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</body>
