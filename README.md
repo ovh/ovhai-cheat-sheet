@@ -1,13 +1,17 @@
 # Cheat sheet for the AI OVHcloud CLI ovhai
- 
+
+This cheat sheet shows you useful ovhai CLI commands.
+
 Here is an example of the cheat sheet:   
 ![An extract of the cheat sheet](./doc/assets/example.png) 
 
 ## Pre-requisites
 
-To update the cheat sheet you need to install:
+To edit and update the cheat sheet in PDF you need to install:
   - [nodejs](https://nodejs.org/)
   - [yargs](http://yargs.js.org/): `$ npm i yargs --save`
+
+Then, run `$ npm install` that will install everything you need to execute `asciidoctorpdf`.
 
 The executable binary of `asciidoctopdf` is in `bin/` folder. If you want, you can download it from [its own repository](https://github.com/asciidoctor/asciidoctor-pdf).
 
