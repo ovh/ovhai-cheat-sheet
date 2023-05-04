@@ -3,8 +3,8 @@
 :authorbio: OVHcloud DevRel team
 :pdf-width: 508mm
 :pdf-height: 361mm
-:version: v1.0.0
-:date: 2022-03-05
+:version: v2.0.0
+:date: 2023-03-29
 
 == About ovhai CLI
 
@@ -16,13 +16,20 @@ OVHcloud AI training is a cloud service that allows Data Scientists, ML Engineer
 
 === Install through curl
 
-Define the region & the OS and then download the binary:
+Define the region & launch the curl command.
+
+For bash:
 
 ```
-export REGION=gra ; export ENV=darwin
-curl -O https://cli.$REGION.training.ai.cloud.ovh.net/ovhai-$ENV.zip
-unzip ovhai-$ENV.zip
-sudo mv ovhai /usr/local/bin/ovhai ; rm ovhai-$ENV.zip
+export REGION=gra
+curl https://cli.$REGION.training.ai.cloud.ovh.net/install.sh | bash
+```
+
+For zsh:
+
+```
+export REGION=gra
+curl https://cli.$REGION.training.ai.cloud.ovh.net/install.sh | zsh
 ```
 
 == Prerequisites
@@ -194,14 +201,14 @@ ovhai data delete <REGION> --prefix test
 ovhai data delete <REGION> --all
 ```
 
-== Apps (Alpha)
+== Deploy (Beta)
 
-*Warning:* _Apps are in Alpha stage so features and commands are subject to change._
+*Warning:* _Deploy is in Beta stage so features and commands are subject to change._
 
 An app is like a job but for API or daemon process that should never stop.
 An app runs as a group of load balanced Docker containers within OVHcloud AI infrastructure.
 
-You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.
+You can specify a Docker image (from AI Training shared registry, Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.
 
 === List apps
 
@@ -258,13 +265,13 @@ Already installed for you, and that you pay only for your notebooks while they a
 === Display available Machine Learning frameworks
 
 ```
-ovhai capabilities framework
+ovhai capabilities framework ls
 ```
 
 === Display available editors for notebooks
 
 ```
-ovhai capabilities editor
+ovhai capabilities editor ls
 ```
 
 === List notebooks
@@ -276,7 +283,7 @@ ovhai notebook ls
 === Run a notebook using PyTorch and JupyterLab, with 1 GPU and allow access to it without authentication
 
 ```
-ovhai notebook run jupyterlab pytorch --gpu 1 --unsecure-http
+ovhai notebook run --gpu 1 --unsecure-http pytorch jupyterlab
 ```
 
 **--unsecure-http**: allow to bypass authentication with an OpenStack user
@@ -284,7 +291,7 @@ ovhai notebook run jupyterlab pytorch --gpu 1 --unsecure-http
 === Run a notebook with a specified framework version, 1 CPU and mount a volume linked to an Object Storage container
 
 ```
-ovhai notebook run pytorch jupyterlab --framework-version 1.8.1-ovh.beta.1 --flavor ai1-1-cpu --cpu 1 -v my-container@<REGION>:/data:ro
+ovhai notebook run --framework-version pytorch1.10.1-py39-cuda10.2-v22-4 --flavor ai1-1-cpu --cpu 1 -v my-container@<REGION>:/data:ro pytorch jupyterlab
 ```
 
 === Run a notebook and give access to it for people outside of your Public Cloud project
@@ -308,7 +315,7 @@ Go to the URL on your browser, click on *Login with token* and enter the token.
 === Get notebook information
 
 ```
-ovhai get notebook <notebook_ID>
+ovhai notebook get <notebook_ID>
 ```
 
 === Start a stopped notebook
