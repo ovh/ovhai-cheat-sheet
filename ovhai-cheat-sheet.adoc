@@ -201,7 +201,7 @@ ovhai data delete <REGION> --prefix test
 ovhai data delete <REGION> --all
 ```
 
-== Deploy (Beta)
+== Deploy
 
 *Warning:* _Deploy is in Beta stage so features and commands are subject to change._
 
