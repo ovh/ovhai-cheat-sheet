@@ -203,7 +203,6 @@ ovhai data delete <REGION> --all
 
 == Deploy
 
-*Warning:* _Deploy is in Beta stage so features and commands are subject to change._
 
 An app is like a job but for API or daemon process that should never stop.
 An app runs as a group of load balanced Docker containers within OVHcloud AI infrastructure.
