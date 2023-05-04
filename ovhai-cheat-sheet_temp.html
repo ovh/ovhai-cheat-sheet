@@ -22,13 +22,19 @@ OVHcloud AI training is a cloud service that allows Data Scientists, ML Engineer
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_install_through_curl">Install through curl</h3>
-<p class="">Define the region &amp; the OS and then download the binary:</p>
+<p class="">Define the region &amp; launch the curl command.</p>
+<p class="">For bash:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>export REGION=gra ; export ENV=darwin
-curl -O https://cli.$REGION.training.ai.cloud.ovh.net/ovhai-$ENV.zip
-unzip ovhai-$ENV.zip
-sudo mv ovhai /usr/local/bin/ovhai ; rm ovhai-$ENV.zip</code></pre>
+<pre class="highlight"><code>export REGION=gra
+curl https://cli.$REGION.training.ai.cloud.ovh.net/install.sh | bash</code></pre>
+</div>
+</div>
+<p class="">For zsh:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export REGION=gra
+curl https://cli.$REGION.training.ai.cloud.ovh.net/install.sh | zsh</code></pre>
 </div>
 </div>
 </div>
@@ -80,10 +86,6 @@ Enter the user name and password.</p>
 <pre class="highlight"><code>ovhai me</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="">&nbsp;</h3>
-
 </div>
 <div class="sect2">
 <h3 id="_show_all_the_regions_and_environments">Show all the regions and environments</h3>
@@ -263,12 +265,11 @@ Object Storage can be used to persist any data needed by jobs, notebooks or apps
 </div>
 </div>
 <div class="sect1">
-<h2 id="_apps_alpha">Apps (Alpha)</h2>
+<h2 id="_deploy">Deploy</h2>
 <div class="sectionbody">
-<p class=""><strong>Warning:</strong> <em>Apps are in Alpha stage so features and commands are subject to change.</em></p>
 <p class="">An app is like a job but for API or daemon process that should never stop.
 An app runs as a group of load balanced Docker containers within OVHcloud AI infrastructure.</p>
-<p class="">You can specify a Docker image (from Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.</p>
+<p class="">You can specify a Docker image (from AI Training shared registry, Docker Hub or a private registry), allocate the request hardware requirements (number of GPUs, number of CPUs), link the data in input and output to an Object Storage through volumes, and run it.</p>
 <div class="sect2">
 <h3 id="_list_apps">List apps</h3>
 <div class="listingblock">
@@ -329,18 +330,6 @@ An app runs as a group of load balanced Docker containers within OVHcloud AI inf
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2">&nbsp;</h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
-<h2 id="_3">&nbsp;</h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
 <h2 id="_notebooks">Notebooks</h2>
 <div class="sectionbody">
 <p class="">Notebook is used to easily work with one of the well-known Machine Learning frameworks on either JupyterLab or VSCode and powerful hardware.</p>
@@ -349,7 +338,7 @@ An app runs as a group of load balanced Docker containers within OVHcloud AI inf
 <h3 id="_display_available_machine_learning_frameworks">Display available Machine Learning frameworks</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>ovhai capabilities framework</code></pre>
+<pre class="highlight"><code>ovhai capabilities framework ls</code></pre>
 </div>
 </div>
 </div>
@@ -357,7 +346,7 @@ An app runs as a group of load balanced Docker containers within OVHcloud AI inf
 <h3 id="_display_available_editors_for_notebooks">Display available editors for notebooks</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>ovhai capabilities editor</code></pre>
+<pre class="highlight"><code>ovhai capabilities editor ls</code></pre>
 </div>
 </div>
 </div>
@@ -373,7 +362,7 @@ An app runs as a group of load balanced Docker containers within OVHcloud AI inf
 <h3 id="_run_a_notebook_using_pytorch_and_jupyterlab_with_1_gpu_and_allow_access_to_it_without_authentication">Run a notebook using PyTorch and JupyterLab, with 1 GPU and allow access to it without authentication</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>ovhai notebook run jupyterlab pytorch --gpu 1 --unsecure-http</code></pre>
+<pre class="highlight"><code>ovhai notebook run --gpu 1 --unsecure-http pytorch jupyterlab</code></pre>
 </div>
 </div>
 <p class=""><strong>--unsecure-http</strong>: allow to bypass authentication with an OpenStack user</p>
@@ -382,7 +371,7 @@ An app runs as a group of load balanced Docker containers within OVHcloud AI inf
 <h3 id="_run_a_notebook_with_a_specified_framework_version_1_cpu_and_mount_a_volume_linked_to_an_object_storage_container">Run a notebook with a specified framework version, 1 CPU and mount a volume linked to an Object Storage container</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>ovhai notebook run pytorch jupyterlab --framework-version 1.8.1-ovh.beta.1 --flavor ai1-1-cpu --cpu 1 -v my-container@&lt;REGION&gt;:/data:ro</code></pre>
+<pre class="highlight"><code>ovhai notebook run --framework-version pytorch1.10.1-py39-cuda10.2-v22-4 --flavor ai1-1-cpu --cpu 1 -v my-container@&lt;REGION&gt;:/data:ro pytorch jupyterlab</code></pre>
 </div>
 </div>
 </div>
@@ -407,7 +396,7 @@ An app runs as a group of load balanced Docker containers within OVHcloud AI inf
 <h3 id="_get_notebook_information">Get notebook information</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>ovhai get notebook &lt;notebook_ID&gt;</code></pre>
+<pre class="highlight"><code>ovhai notebook get &lt;notebook_ID&gt;</code></pre>
 </div>
 </div>
 </div>
