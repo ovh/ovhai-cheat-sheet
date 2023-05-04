@@ -4,7 +4,7 @@
 :pdf-width: 508mm
 :pdf-height: 361mm
 :version: v2.0.0
-:date: 2023-03-29
+:date: 2023-05-04
 
 == About ovhai CLI
 
@@ -68,7 +68,6 @@ Enter the user name and password.
 ovhai me
 ```
 
-=== &nbsp;
 === Show all the regions and environments
 
 ```
@@ -253,8 +252,6 @@ ovhai app delete <app_ID>
 
 *Warning:* you need to stop the app before executing this command!
 
-== &nbsp;
-== &nbsp;
 == Notebooks
 
 Notebook is used to easily work with one of the well-known Machine Learning frameworks on either JupyterLab or VSCode and powerful hardware.
